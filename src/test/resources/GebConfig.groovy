@@ -5,27 +5,17 @@
 */
 
 
-import org.openqa.selenium.chrome.ChromeDriver
-import org.openqa.selenium.firefox.FirefoxDriver
+import geb.driver.SauceLabsDriverFactory
 
 waiting {
-	timeout = 2
+    timeout = 2
 }
 
-environments {
-	
-	// run via “./gradlew chromeTest”
-	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
-	chrome {
-		driver = { new ChromeDriver() }
-	}
-	
-	// run via “./gradlew firefoxTest”
-	// See: http://code.google.com/p/selenium/wiki/FirefoxDriver
-	firefox {
-		driver = { new FirefoxDriver() }
-	}
-
+def sauceBrowser = System.getProperty("geb.sauce.browser")
+if (sauceBrowser) {
+    driver = {
+        def username = System.getenv("GEB_SAUCE_LABS_USER")
+        def accessKey = System.getenv("GEB_SAUCE_LABS_ACCESS_PASSWORD")
+        new SauceLabsDriverFactory().create(sauceBrowser, username, accessKey)
+    }
 }
-
-// To run the tests with all browsers just run “./gradlew test”
